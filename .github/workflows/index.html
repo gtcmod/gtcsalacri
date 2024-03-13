@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gartic Salas Criadas</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css" integrity="sha384-mQ93GR66B00ZXjt0YO5KlohRA5SY2XofGJopUx2W+0AdszcJmakoFVI5eNFOEMJ5" crossorigin="anonymous">
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: #333; /* Cinza */
+            color: #FFA500; /* Laranja */
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            text-align: center;
+        }
+
+        header {
+            width: 100%;
+            text-align: center;
+            padding: 10px 0;
+            background-color: #808080; /* Cinza */
+            border-bottom: 2px solid #FFA500; /* Linha divisória laranja */
+            margin-bottom: 10px;
+            color: #FFA500;
+        }
+
+        h1 {
+            margin-top: 20px;
+            color: #FFA500;
+            font-size: 30px;
+        }
+
+        input {
+            margin-bottom: 10px;
+            padding: 10px;
+            font-size: 16px;
+            border: 2px solid #FFA500;
+            border-radius: 5px;
+        }
+
+        button {
+            margin-bottom: 20px;
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            border-radius: 5px;
+        }
+
+        #log {
+            width: 80%;
+            color: white;
+            max-height: 150px;
+            overflow-y: auto;
+            padding: 10px;
+            background-color: #808080; /* Cinza */
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+        }
+
+        table {
+            width: 80%;
+            border-collapse: collapse;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            background-color: #404040;
+            color: #ff9900;
+            border-radius: 10px;
+        }
+
+        th, td {
+            padding: 15px;
+            text-align: left;
+            border: 1px solid #FFA500;
+            color: #fff;
+        }
+
+        th {
+            background-color: #ff9900;
+            color: white; /* Alterei a cor do texto para branco */
+            cursor: pointer;
+        }
+
+        a {
+            text-decoration: none;
+            color: #007BFF;
+            font-weight: bold;
+        }
+
+        #buttons-container {
+            position: fixed;
+            top: 10px;
+            display: flex;
+            justify-content: space-between;
+            width: 100%;
+            padding: 0 10px;
+            z-index: 1000;
+        }
+
+        #buttons-container button {
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            padding: 10px;
+            cursor: pointer;
+        }
+
+        @media only screen and (max-width: 600px) {
+            h1 {
+                font-size: 24px;
+            }
+            input, button {
+                width: 100%;
+                max-width: 300px;
+            }
+            table {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <h1>Gartic Salas Criadas</h1>
+    </header>
+    <div id="buttons-container">
+        <button id="backButton" onclick="goToHomePage()"><i class="fas fa-arrow-left"></i> Voltar</button>
+        <button id="reloadButton" onclick="reloadPage()"><i class="fas fa-sync-alt"></i> Recarregar</button>
+    </div>
+    <input type="text" id="playerNameInput" placeholder="Digite o nome do jogador">
+    <button onclick="searchPlayer()">Buscar</button>
+    <div id="log"></div>
+    <table id="salasTable">
+        <thead>
+            <tr>
+                <th onclick="sortTable(0)">ID</th>
+                <th onclick="sortTable(1)">Nome</th>
+                <th onclick="sortTable(2)">Tema</th>
+                <th onclick="sortTable(3)">Quantidade</th>
+                <th onclick="sortTable(4)">Senha</th>
+            </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+
+  <script>
+    const temas = {
+      "21": "Adjetivos",
+      "5": "Alimentos",
+      "4": "Animais",
+      "2": "Avançado",
+      "14": "Bandeiras",
+      "10": "Caricaturas",
+      "425903": "Clash Royale",
+      "6": "Desenho Animado",
+      "297024": "Dragon Ball Z",
+      "5462": "Espanhol",
+      "8": "Filmes",
+      "371699": "Game of Thrones",
+      "17": "Games",
+      "16430": "General",
+      "1": "Geral",
+      "779895": "Halloween",
+      "16074": "Harry Potter",
+      "19": "Inglês",
+      "18": "Iniciante",
+      "94450": "Italiano",
+      "373919": "Livros",
+      "279906": "LoL",
+      "254555": "Marvel e DC",
+      "371922": "Minecraft",
+      "23": "Músicas",
+      "16073": "Naruto",
+      "792803": "Natal",
+      "25947": "Novelas",
+      "3": "Objetos",
+      "426027": "Palavras Invertidas",
+      "13": "Pokémons",
+      "426028": "Pokémons 1gen",
+      "13183": "Profissões",
+      "429630": "Sílabas",
+      "373920": "Supernatural",
+      "378747": "Tema Maluco",
+      "29332": "Times de Futebol",
+      "20": "Verbos"
+    };
+
+    let originalData = null;
+
+    function fetchData() {
+      return fetch('https://gartic.com.br/request/mobile/salas.php')
+        .then(response => response.json());
+    }
+
+    function updateTable(data) {
+      const tableBody = document.querySelector('#salasTable tbody');
+      tableBody.innerHTML = '';
+
+      data.c.forEach(sala => {
+        const row = document.createElement('tr');
+        row.innerHTML = `
+          <td><a href="https://gartic.com.br/0${sala.i}" target="_blank">${sala.i}</a></td>
+          <td>${sala.n}</td>
+          <td>${temas[sala.t] || "Tema Criado"}</td>
+          <td>${sala.q}</td>
+          <td>${sala.s == "1" ? "Sim" : "Não"}</td>
+        `;
+        tableBody.appendChild(row);
+      });
+    }
+
+function reloadPage() {
+            location.reload();
+        }
+
+        function goToHomePage() {
+            window.location.href = 'https://gtcmod.github.io/gtcsalas/';
+        }
+
+    function logMessage(message) {
+    const logContainer = document.getElementById('log');
+    logContainer.innerHTML += `<p>${message}</p>`;
+    logContainer.scrollTop = logContainer.scrollHeight;
+}
+
+async function searchPlayer() {
+    const playerName = document.getElementById('playerNameInput').value;
+    if (playerName.trim() === "") {
+        alert("Digite o nome do jogador.");
+        return;
+    }
+
+    // Limpar resultados anteriores
+    const tableBody = document.querySelector('#salasTable tbody');
+    tableBody.innerHTML = '';
+
+    // Limpar logs anteriores
+    const logContainer = document.getElementById('log');
+    logContainer.innerHTML = '';
+
+    logMessage(`Procurando por ${playerName}...`);
+
+    if (!originalData) {
+        originalData = await fetchData();
+    }
+
+    fetchPlayer(playerName, originalData);
+}
+
+async function fetchPlayer(playerName, data) {
+    const tableBody = document.querySelector('#salasTable tbody');
+
+    for (const sala of data.c) {
+        try {
+            const response = await fetch(`https://gartic.com.br/info_sala.php?x=&id_sala=${sala.i}`);
+            const result = await response.json();
+            const jogadores = result.jogadores || [];
+
+            if (jogadores.includes(playerName)) {
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                  <td><a href="https://gartic.com.br/0${sala.i}" target="_blank">${sala.i}</a></td>
+                  <td><a href="https://gartic.com.br/${playerName}" target="_blank">${playerName}</a></td>
+                  <td>${temas[sala.t] || "Tema Criado"}</td>
+                  <td>${sala.q}</td>
+                  <td>${sala.s == "1" ? "Sim" : "Não"}</td>
+                `;
+                tableBody.appendChild(row);
+
+                logMessage(`Jogador ${playerName} encontrado na sala ${sala.i}`);
+            }
+        } catch (error) {
+            logMessage(`Erro ao procurar ${playerName} na sala ${sala.i}: ${error.message}`);
+        }
+      }
+    }
+
+    function padLeftZero(value) {
+      return value.toString().padStart(8, '0');
+    }
+
+    function sortTable(columnIndex) {
+      const table = document.querySelector('#salasTable');
+      const rows = Array.from(table.querySelectorAll('tbody tr'));
+
+      rows.sort((a, b) => {
+        const cellA = a.getElementsByTagName('td')[columnIndex].textContent.trim();
+        const cellB = b.getElementsByTagName('td')[columnIndex].textContent.trim();
+
+        return isNaN(cellA) ? cellA.localeCompare(cellB) : cellA - cellB;
+      });
+
+      table.querySelector('tbody').innerHTML = '';
+      rows.forEach(row => table.querySelector('tbody').appendChild(row));
+    }
+
+    // Atualiza a tabela a cada 5 segundos (5000 milissegundos)
+    setInterval(() => {
+      if (!originalData) {
+        fetchData().then(data => updateTable(data));
+      }
+    }, 5000);
+
+    // Carrega os dados ao carregar a página
+    fetchData().then(data => updateTable(data));
+  </script>
+</body>
+</html>
