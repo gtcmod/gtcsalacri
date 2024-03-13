@@ -69,6 +69,7 @@
 
         table {
             width: 80%;
+            max-width: 100%;
             border-collapse: collapse;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
             background-color: #404040;
@@ -96,13 +97,12 @@
         }
 
         #buttons-container {
-            position: fixed;
-            top: 10px;
             display: flex;
-            justify-content: space-between;
+            flex-wrap: wrap;
+            justify-content: space-around;
             width: 100%;
             padding: 0 10px;
-            z-index: 1000;
+            margin-bottom: 10px;
         }
 
         #buttons-container button {
@@ -112,6 +112,9 @@
             border-radius: 5px;
             padding: 10px;
             cursor: pointer;
+            flex: 1;
+            max-width: 200px;
+            margin: 5px;
         }
 
         @media only screen and (max-width: 600px) {
